@@ -1,8 +1,8 @@
-# iPhone 随手拍 · 中文提示词 Skill
+# iPhone 随手拍照片提示词 Skill(中文输出)
 
 把一句简短的场景描述,变成可信的「iPhone 随手拍」风格照片提示词 —— **全中文输出**,适配即梦、豆包、可灵等对中文提示词服从度更好的生图工具。
 
-> Turn short scene descriptions into believable iPhone-style candid photo prompts — with Simplified Chinese output. A Chinese-output fork of [aijiduonadegou/iphone-photo](https://github.com/aijiduonadegou/iphone-photo) (MIT).
+兼容任何遵循 `SKILL.md` 规范的智能体(ZCode、Claude Code、Codex CLI 等);不使用智能体时,也可以把本仓库当作独立的提示词工程参考文档直接阅读、复制。
 
 ## 它解决什么问题
 
@@ -14,43 +14,70 @@
 
 ## 安装
 
-复制整个文件夹到 ZCode 的用户级 skills 目录:
+把整个文件夹放入你的智能体加载 skills 的目录(遵循 SKILL.md 通用规范),重启或新开会话后自动被发现:
 
-```text
-~/.zcode/skills/iphone-candid-photo-cn/
-```
+| 智能体 | 安装路径 |
+|---|---|
+| ZCode | `~/.zcode/skills/iphone-candid-photo-cn/` |
+| Codex CLI | `$CODEX_HOME/skills/`(默认 `~/.codex/skills/`) |
+| Claude Code | `~/.claude/skills/iphone-candid-photo-cn/` |
+| 其他遵循 SKILL.md / `.agents/skills/` 约定的智能体 | 对应的 skills 目录 |
 
-Windows 默认:
-
-```text
-C:\Users\<你>\.zcode\skills\iphone-candid-photo-cn\
-```
-
-采用标准 `SKILL.md` 格式,同样兼容 Codex(复制到 `$CODEX_HOME/skills/` 即可)。**复制后新开一个会话**才会被发现。
+不使用智能体?直接读 [SKILL.md](SKILL.md) 和 [references/schema.md](references/schema.md),把下方输出示例里的 `full_prompt_string` 换成你的场景,粘贴到任意生图工具即可。
 
 ## 用法
 
-直接生成(有图像工具时默认直接出图):
+安装后用自然语言触发,无需记住命令:
 
 ```text
 用 iPhone 随手拍风格生成:雨夜便利店门口的朋友合影。
 ```
 
-只要中文 JSON 提示词(不生成图):
+只要中文 JSON 提示词,不生成图:
 
 ```text
 只输出中文 JSON 提示词,不要生成图片:车内自拍,驾驶位,金色大圈耳环……
 ```
 
-英文回退:
+带参考图(身份 / 姿势 / 编辑目标分角色管理):
+
+```text
+参考我上传的两张图:第一张控制人物身份,第二张控制姿势。生成真实版 iPhone 合影。
+```
+
+英文回退(部分海外模型英文服从度更好时):
 
 ```text
 输出英文版提示词:黄昏天台上的闺蜜合影。
 ```
 
-## 输出示例
+## 提示词方法论
 
-场景:「车内自拍,成熟上海女性,驾驶位,金色大圈耳环」→
+### 镜头选择(选一个,不并列)
+
+| 镜头 | 适用场景 |
+|---|---|
+| 24mm 主摄 f/1.78 | 默认抓拍场景、路人视角 |
+| 13mm 超广角 f/2.2 | 臂距自拍、狭窄室内、夸张第一人称视角 |
+| 77mm 长焦 | 远距离、不打扰被摄者、压缩透视 |
+
+### 瑕疵克制(选 2~4 个,不堆叠)
+
+细腻数码噪点(不用胶片颗粒)· 轻微手抖或运动模糊 · 不完美构图 / 边缘裁切 / 前景遮挡 · 轻微高光溢出 · 真实皮肤微纹理(毛孔、绒毛、哑光与微反光混合)。
+
+**禁止**:"汗珠光泽""发光肌肤"、整脸油光、磨皮 —— 真实感来自克制的缺陷,堆满瑕疵或油光皮肤会立刻暴露 AI 痕迹。
+
+### 默认审美
+
+"plandid"(设计过的随拍):自然窗光、黄金时刻、夜间局部硬闪光;保留普通杂物与真实材质。避免专业相机质感、夸张焦外光斑、电影或影棚灯光、美颜滤镜、海报式构图、计划外文字与水印。
+
+负面提示词基线:`专业相机, 单反, 焦外光斑, 变形宽银幕, 电影灯光, 影棚灯光`
+
+### 完成前自检
+
+像手机快照而非电影剧照 · 人物身份姿势关系完整 · 镜头与机位匹配 · 瑕疵可见但不夸张 · 皮肤有纹理无油光 · 没有多余人物、文字与剧情。
+
+## 输出示例
 
 ```json
 {
@@ -68,32 +95,27 @@ C:\Users\<你>\.zcode\skills\iphone-candid-photo-cn\
 }
 ```
 
-完整契约见 [references/schema.md](references/schema.md)。
-
-## 与原版的差异
-
-| | 原版 iphone-photo | 本版 iphone-candid-photo-cn |
-|---|---|---|
-| 提示词输出语言 | 英文 | **简体中文**(专有名词保留原文) |
-| 负面提示词 | 英文六项默认 | 中文对应项 |
-| 英文回退 | — | 用户明确要求时输出英文 |
-| 工作流(模式/镜头/瑕疵/自检) | ✓ | 保持一致(正文已中文化) |
+完整字段规则见 [references/schema.md](references/schema.md)。
 
 ## 文件结构
 
 ```text
 iphone-candid-photo-cn/
-├── SKILL.md            # 核心行为与生成工作流(中文)
+├── SKILL.md            # 核心行为与生成工作流
 ├── references/
-│   └── schema.md       # JSON 提示词契约(中文输出版)
+│   └── schema.md       # JSON 提示词契约
 ├── agents/
 │   └── openai.yaml     # 客户端界面元数据
-├── NOTICE.md           # 来源与署名
+├── NOTICE.md           # 来源说明
 └── LICENSE             # MIT
 ```
 
-## 署名与许可
+## 自定义
 
-本 skill 是 [aijiduonadegou/iphone-photo](https://github.com/aijiduonadegou/iphone-photo)(MIT)的中文输出改造版;原版灵感来自 Machina(`@EXM7777`)公开分享的移动摄影元提示,详见 [NOTICE.md](NOTICE.md)。
+- **改输出语言**:编辑 `SKILL.md` 的「输出语言」一节;
+- **改默认画幅**:`SKILL.md`「构建照片」第 2 条;
+- **改负面词基线**:`references/schema.md` 的示例值。
 
-许可为 MIT,覆盖本独立改写的实现;不授予第三方商标、参考图、角色或其他用户素材的权利。
+## 许可
+
+MIT,详见 [LICENSE](LICENSE) 与 [NOTICE.md](NOTICE.md)。
