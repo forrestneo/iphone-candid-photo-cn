@@ -2,7 +2,7 @@
 
 把一句简短的场景描述,变成可信的「iPhone 随手拍」风格照片提示词 —— **全中文输出**,适配即梦、豆包、可灵等对中文提示词服从度更好的生图工具。
 
-兼容任何遵循 `SKILL.md` 规范的智能体(ZCode、Claude Code、Codex CLI 等);不使用智能体时,也可以把本仓库当作独立的提示词工程参考文档直接阅读、复制。
+兼容任何遵循 `SKILL.md` 规范的智能体 —— **面向 ZCode、WorkBuddy、DeepSeek**,同样适用于 Claude Code、Codex CLI;不使用智能体时,也可以把本仓库当作独立的提示词工程参考文档直接阅读、复制。已在 **GLM-5.3-Flash** 上开发与验证,skill 为纯提示词规则、不含平台专有依赖,任何能遵循系统指令的模型(GLM、DeepSeek 等)均可加载。
 
 ## 它解决什么问题
 
@@ -16,12 +16,16 @@
 
 把整个文件夹放入你的智能体加载 skills 的目录(遵循 SKILL.md 通用规范),重启或新开会话后自动被发现:
 
-| 智能体 | 安装路径 |
+| 智能体 | 加载方式 |
 |---|---|
-| ZCode | `~/.zcode/skills/iphone-candid-photo-cn/` |
+| **ZCode**(GLM-5.3-Flash) | 文件夹放入 `~/.zcode/skills/iphone-candid-photo-cn/` |
+| **WorkBuddy** | 若支持自定义助手 / 系统提示词:将 `SKILL.md` 全文粘贴为助手的系统提示词;若支持 skills 目录约定,放入对应目录 |
+| **DeepSeek**(网页版 / API / 智能体) | 将 `SKILL.md` 全文粘贴为系统提示词或自定义指令 |
 | Codex CLI | `$CODEX_HOME/skills/`(默认 `~/.codex/skills/`) |
 | Claude Code | `~/.claude/skills/iphone-candid-photo-cn/` |
 | 其他遵循 SKILL.md / `.agents/skills/` 约定的智能体 | 对应的 skills 目录 |
+
+粘贴为系统提示词时,行为规则与目录加载完全一致;建议同时在系统提示词开头加一句:「严格遵循以下 skill 规则工作」。
 
 不使用智能体?直接读 [SKILL.md](SKILL.md) 和 [references/schema.md](references/schema.md),把下方输出示例里的 `full_prompt_string` 换成你的场景,粘贴到任意生图工具即可。
 
