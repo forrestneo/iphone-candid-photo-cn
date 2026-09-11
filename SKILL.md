@@ -9,6 +9,12 @@ metadata:
 
 把一句简短的场景请求变成可信的高端手机照片。有可用图像生成工具时,默认先在内部按本 skill 构建结构化提示词,然后直接调用工具生成图像;不要停留在提示词或 JSON 层面,除非用户明确只要提示词。
 
+## 适用环境与加载方式
+
+- 本 skill 面向 **ZCode、WorkBuddy、DeepSeek** 等智能体,在 **GLM-5.3-Flash** 上开发与验证;不依赖任何平台专有功能,任何能遵循 SKILL.md 规范或系统指令的模型(GLM、DeepSeek 等)均可加载。
+- 有 skills 目录的智能体(ZCode、Claude Code、Codex CLI 等):把整个文件夹放入对应 skills 目录。
+- 无 skills 目录的智能体(DeepSeek 网页版 / API、WorkBuddy 自定义助手等):将本文件全文粘贴为系统提示词或自定义指令,行为规则完全一致。
+
 ## 输出语言
 
 本 skill 与英文版的核心差异是输出语言,遵守以下规则:
