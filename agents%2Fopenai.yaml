@@ -1,4 +1,0 @@
-interface:
-  display_name: "iPhone 随手拍(中文)"
-  short_description: "生成真实的、带自然瑕疵感的 iPhone 风格照片,输出中文提示词"
-  default_prompt: "用 iPhone 随手拍风格把我的场景写成中文提示词。"
